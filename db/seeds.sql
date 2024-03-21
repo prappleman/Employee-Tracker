@@ -1,19 +1,37 @@
--- Populate the database with initial seed data for testing and development purposes.
+-- Department table and corresponding values
+INSERT INTO department (name)
+VALUES ("Management"),
+        ("Sales"),
+        ("Accounting"),
+        ("Human Resources"),
+        ("Customer Service"),
+        ("Quality Assurance"),
+        ("Office Administration");
 
--- Insert departments data
-INSERT INTO departments (name) VALUES
-    ('Sales'),
-    ('Finance'),
-    ('Human Resources');
+-- Role table and corresponding values
+INSERT INTO role (title, salary, department_id)
+VALUES ("Branch Manger", 70000, 1),
+        ("Assistant to Branch Manager", 60000, 1),
+        ("Salesman", 50000, 2),
+        ("Accountant", 65000, 3),
+        ("Human Resources Representative", 55000, 4),
+        ("Customer Service Specialist", 55000, 5),
+        ("QA Director", 50000, 6),
+        ("Receptionist", 45000, 7);
 
--- Insert roles data
-INSERT INTO roles (title, salary, department_id) VALUES
-    ('Sales Representative', 50000.00, 1),
-    ('Financial Analyst', 60000.00, 2),
-    ('HR Coordinator', 45000.00, 3);
+-- Employee table and corresponding values
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Michael", "Scott", 1, 1),
+        ("Jim", "Halpert", 3, NULL),
+        ("Dwight", "Schrute", 2, 2),
+        ("Stanley", "Hudson", 3, NULL),
+        ("Phyllis", "Vance", 3, NULL),
+        ("Oscar", "Martinez", 4, NULL),
+        ("Angela", "Martin", 4, NULL),
+        ("Kevin", "Malone", 4, NULL),
+        ("Toby", "Flenderson", 5, NULL),
+        ("Kelly", "Kapoor", 6, NULL),
+        ("Creed", "Bratton", 7, NULL),
+        ("Pam", "Beesly", 8, NULL),
+        ("Erin", "Hannon", 8, NULL);
 
--- Insert employees data
-INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES
-    ('John', 'Doe', 1, NULL),
-    ('Jane', 'Smith', 2, 1),
-    ('Mike', 'Johnson', 3, 1);
