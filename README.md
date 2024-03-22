@@ -13,6 +13,8 @@ This Employee Tracker Application is a command-line tool built with Node.js, MyS
 - [Questions](#questions)
 
 ## Getting Started
+Watch a video demonstration of the project [here](https://youtu.be/8VO373lwoyM).
+
 1. **Install Dependencies:**
 
     Make sure you have Node.js installed. Then, in your project directory, run the following command to install the required dependencies:
