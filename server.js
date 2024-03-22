@@ -1,4 +1,3 @@
-
 // Linking SQL2, Inquirer, and Console Table to script file
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
@@ -6,10 +5,7 @@ const inquirer = require('inquirer');
 require('console.table');
 require('dotenv').config();
 
-
-// Creating MySQL connection object to local host using port and password
-// Also evaluating database being used
-// Sets up details for connection
+// Creating MySQL connection 
 const connection = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -17,8 +13,6 @@ const connection = mysql.createConnection({
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
 });
-
-
 
 // Connection to menu database with greeting and start of menu
 // Creates connection
@@ -91,9 +85,6 @@ const viewAllDepartments = () => {
 
 // Function to view all roles within database
 const viewAllRoles = () => {
-  // Uses a different syntax than normal for connection.query
-  // The single letters represent the first letter of each table within seeds.sql. This is then connected to the corresponding label issued in the schema.sql file to display that selected data.
-  // This pulls from the employee table and joins the role table and department table data to it
   connection.query(`SELECT 
     r.id,
     r.title,
@@ -134,7 +125,6 @@ const viewAllEmployees = () => {
 
 // function to add department
 const addDepartment = () => {
-  // Simple prompt to input string for department
   inquirer.prompt([
     {
       name: 'department',
@@ -143,7 +133,6 @@ const addDepartment = () => {
 
     },
   ])
-  // Utilizes a connection.query to insert department into seeds.sql table based on values
   .then(answer => {
     connection.query(
       'INSERT INTO department (name) VALUES (?)',
@@ -159,9 +148,6 @@ const addDepartment = () => {
 
 // Function to add a role
 const addRole = () => {
-  // This is a little different from the function above in that it uses inquirer to rpoduce a list prompt so the user can select from the database
-  // This called for making a object callled departmentNames so the function can pull the department names from the department table and dsiplay them
-  // A problem that occured was the entry of the data; the departments are based on department ids which are integers and the inquirer list inputs string data, so I had to include a function using accumulative and currency to convert department names into their respective department ids upon submission
   connection.query('SELECT id, name FROM department', (err, res) => {
     if (err) throw err;
 
@@ -309,14 +295,7 @@ const updateEmployeeInfo = () => {
   });
 };
 
-
-
-
-
-
-
-
-
+// Update Employee role and department
 const updateEmployeePosition = (employeeId) => {
   connection.query('SELECT id, title FROM role', (err, roleRes) => {
     if (err) throw err;
@@ -380,12 +359,8 @@ const updateEmployeePosition = (employeeId) => {
     });
   });
 };
-
-
-
-
-
     
+//Update Employee manager
 const updateEmployeeManager = (employeeId) => {
   connection.query('SELECT id, CONCAT(first_name, " ", last_name) AS name FROM employee', (err, res) => {
     if (err) throw err;
@@ -415,8 +390,6 @@ const updateEmployeeManager = (employeeId) => {
     });
   });
 };
-
-// Extra Credit
 
 // Function to delete a department
 // Similar structure and syntax to adding departments/etc. but uses SQL command DELETE
