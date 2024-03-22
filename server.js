@@ -317,59 +317,71 @@ const updateEmployeeInfo = () => {
 
 
 
-
-
-
-
-
-
 const updateEmployeePosition = (employeeId) => {
-  connection.query('SELECT id, name FROM department', (err, deptRes) => {
+  connection.query('SELECT id, title FROM role', (err, roleRes) => {
     if (err) throw err;
 
-    const departmentNames = deptRes.reduce((acc, curr) => {
-      acc[curr.name] = curr.id;
+    const roles = roleRes.reduce((acc, curr) => {
+      acc[curr.title] = curr.id;
       return acc;
     }, {});
 
-    connection.query('SELECT id, title AS name FROM role', (err, roleRes) => {
-      if (err) throw err;
+    inquirer.prompt([
+      {
+        name: 'role',
+        type: 'list',
+        message: 'Select the new role:',
+        choices: Object.keys(roles),
+      }
+    ]).then(answer => {
+      const roleId = roles[answer.role];
 
-      const roles = roleRes.reduce((acc, curr) => {
-        acc[curr.name] = curr.id;
-        return acc;
-      }, {});
+      // Update role_id in employee table
+      connection.query(
+        'UPDATE employee SET role_id = ? WHERE id = ?',
+        [roleId, employeeId],
+        (err, res) => {
+          if (err) throw err;
+          console.log(`Role updated for employee ID ${employeeId}`);
 
-      inquirer.prompt([
-        {
-          name: 'role',
-          type: 'list',
-          message: 'Select the new role:',
-          choices: Object.keys(roles),
-        },
-        {
-          name: 'department',
-          type: 'list',
-          message: 'Select the new department:',
-          choices: Object.keys(departmentNames),
-        }
-      ]).then(answer => {
-        const roleId = roles[answer.role];
-        const departmentId = departmentNames[answer.department];
-
-        connection.query(
-          'UPDATE employee SET role_id = ?, department_id = ? WHERE id = ?',
-          [roleId, departmentId, employeeId],
-          (err, res) => {
+          // Prompt user to select the new department
+          connection.query('SELECT id, name FROM department', (err, deptRes) => {
             if (err) throw err;
-            console.log(`Role and department updated for employee ID ${employeeId}`);
-            startMenu();
-          }
-        );
-      });
+
+            const departments = deptRes.reduce((acc, curr) => {
+              acc[curr.name] = curr.id;
+              return acc;
+            }, {});
+
+            inquirer.prompt([
+              {
+                name: 'department',
+                type: 'list',
+                message: 'Select the new department:',
+                choices: Object.keys(departments),
+              }
+            ]).then(answer => {
+              const departmentId = departments[answer.department];
+
+              // Update department_id in role table
+              connection.query(
+                'UPDATE role SET department_id = ? WHERE id = ?',
+                [departmentId, roleId],
+                (err, res) => {
+                  if (err) throw err;
+                  console.log(`Department updated for role ID ${roleId}`);
+                  startMenu();
+                }
+              );
+            });
+          });
+        }
+      );
     });
   });
 };
+
+
 
 
 
